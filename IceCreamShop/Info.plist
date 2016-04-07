@@ -30,9 +30,26 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key></key>
+	<string></string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+    	<key>NSExceptionDomains</key>
+    	<dict>
+        <key>raywenderlich.com</key>
+        <dict>
+            <key>NSIncludesSubdomains</key>
+            <true/>
+            <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+            <true/>
+        </dict>
+    	</dict>
+</dict>
 </dict>
 </plist>

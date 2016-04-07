@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import Alamofire
+import BetterBaseClasses
+import MBProgressHUD
 
-public class PickFlavorViewController: UIViewController, UICollectionViewDelegate {
+public class PickFlavorViewController: BaseViewController, UICollectionViewDelegate {
   
   // MARK: Instance Variables
   
@@ -41,7 +44,52 @@ public class PickFlavorViewController: UIViewController, UICollectionViewDelegat
   }
   
   private func loadFlavors() {
-    // TO-DO: Implement this
+    
+    // 1
+    
+    showLoadingHUD()
+    
+    Alamofire.request(
+      .GET, "http://www.raywenderlich.com/downloads/Flavors.plist",
+      parameters: nil,
+      encoding: .PropertyList(.XMLFormat_v1_0, 0), headers: nil)
+      .responsePropertyList { response in
+        
+        // 2
+        /* guard let strongSelf = self else {
+         return
+         }*/
+        self.hideLoadingHUD()
+        
+        var flavorsArray: [[String : String]]! = nil
+        
+        // 3
+        switch response.result {
+          
+        case .Success(let array):
+          if let array = array as? [[String : String]] {
+            flavorsArray = array
+          }
+          
+        case .Failure( _):
+          print("Couldn't download flavors!") 
+          return 
+        } 
+        
+        // 4 
+        self.flavors = self.flavorFactory.flavorsFromDictionaryArray(flavorsArray) 
+        self.collectionView.reloadData() 
+        self.selectFirstFlavor() 
+    }; 
+  }
+  
+  private func showLoadingHUD() {
+    let hud = MBProgressHUD.showHUDAddedTo(contentView, animated: true)
+    hud.labelText = "Loading..."
+  }
+  
+  private func hideLoadingHUD() {
+    MBProgressHUD.hideAllHUDsForView(contentView, animated: true)
   }
   
   private func selectFirstFlavor() {
